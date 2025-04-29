@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import type { Player } from "@/components/game-setup-modal";
-import Image from "next/image";
+import NextImage from "next/image";
+
 interface YutThrowAreaProps {
   onYutThrow: (result: number[]) => void;
   yutResult: number[];
@@ -12,56 +13,136 @@ interface YutThrowAreaProps {
 }
 
 export default function YutThrowArea({
-  onYutThrow,
-  yutResult,
   currentPlayer,
+  onYutThrow,
   throwCount,
+  yutResult,
 }: YutThrowAreaProps) {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [animationStage, setAnimationStage] = useState(0);
 
-  // 애니메이션 효과를 위한 함수
+  const isAnimatingRef = useRef(false);
+
+  const binaryResult = yutResult.join("");
+  const frontCount = yutResult.filter((r) => r === 1).length;
+  const backCount = yutResult.filter((r) => r === 0).length;
+
+  const yuts = useRef(
+    Array.from({ length: 4 }, (_, i) => ({
+      x: 0,
+      y: 0,
+      vy: 0,
+      isJumping: false,
+      angle: 0,
+      rotationSpeed: 0,
+      faceUp: true,
+      fixedFaceUp: true,
+    }))
+  );
+
+  const gravity = 0.8;
+  const bounceDamping = 0.4;
+  let groundY = 0;
+
+  const frontImage = new Image();
+  const backImage = new Image();
+  frontImage.src = "/images/front.png"; // public 폴더 기준
+  backImage.src = "/images/back.png";
+
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    if (isAnimating) {
-      interval = setInterval(() => {
-        setAnimationStage((prev) => (prev + 1) % 4);
-      }, 150);
+    canvas.width = 500;
+    canvas.height = 400;
+    groundY = canvas.height - 100;
 
-      // 애니메이션 종료 후 결과 표시
-      const timeout = setTimeout(() => {
-        clearInterval(interval);
-        setIsAnimating(false);
+    // 초기 위치 설정
+    yuts.current.forEach((yut, i) => {
+      yut.x = canvas.width / 2 - 100 + i * 70;
+      yut.y = groundY;
+    });
 
-        // 시나리오에 따른 고정 결과
-        let result: number[];
-        if (throwCount === 0) {
-          // 첫 번째 던지기: 0101 (5)
-          result = [0, 1, 0, 1];
-        } else if (throwCount === 1) {
-          // 두 번째 던지기: 1001 (9)
-          result = [1, 0, 0, 1];
-        } else {
-          // 그 이후는 랜덤
-          result = Array(4)
-            .fill(0)
-            .map(() => Math.round(Math.random()));
+    const drawYut = (yut: any) => {
+      ctx.save();
+      ctx.translate(yut.x, yut.y);
+      ctx.rotate(yut.angle);
+
+      const width = 40;
+      const height = 120;
+      const img = yut.faceUp ? frontImage : backImage;
+
+      if (img.complete) {
+        ctx.drawImage(img, 0, 0, img.width, img.height, -width / 2, -height / 2, width, height);
+      } else {
+        ctx.fillStyle = "#ccc";
+        ctx.fillRect(-width / 2, -height / 2, width, height);
+      }
+
+      ctx.restore();
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let yut of yuts.current) {
+        if (yut.isJumping) {
+          yut.vy += gravity;
+          yut.y += yut.vy;
+          yut.angle += yut.rotationSpeed;
+
+          if (yut.y >= groundY) {
+            yut.y = groundY;
+            yut.vy *= -bounceDamping;
+            if (Math.abs(yut.vy) < 2) {
+              yut.isJumping = false;
+              yut.vy = 0;
+              yut.rotationSpeed = 0;
+              yut.angle = 0;
+              yut.faceUp = yut.fixedFaceUp; // 고정 결과 적용
+            }
+          }
         }
+        drawYut(yut);
+      }
 
+      // ✨ 여기 추가 (모든 윷이 멈췄는지 체크)
+      if (isAnimatingRef.current && yuts.current.every((y) => !y.isJumping)) {
+        setIsAnimating(false);
+        isAnimatingRef.current = false;
+        const result = yuts.current.map((yut) => (yut.fixedFaceUp ? 1 : 0));
         onYutThrow(result);
-      }, 1500);
+      }
 
-      return () => {
-        clearInterval(interval);
-        clearTimeout(timeout);
-      };
-    }
-  }, [isAnimating, onYutThrow, throwCount]);
+      requestAnimationFrame(animate);
+    };
 
-  const throwYut = () => {
-    if (isAnimating) return;
+    animate();
+  }, []);
+
+  const throwYuts = () => {
     setIsAnimating(true);
+    isAnimatingRef.current = true;
+
+    let fixedResult: boolean[] = [];
+
+    if (throwCount === 0) {
+      fixedResult = [false, true, false, true]; // 0 1 0 1
+    } else if (throwCount === 1) {
+      fixedResult = [true, false, false, true]; // 1 0 0 1
+    } else {
+      // 기본
+      fixedResult = [true, true, false, false];
+    }
+
+    yuts.current.forEach((yut, i) => {
+      yut.isJumping = true;
+      yut.vy = -(15 + Math.random() * 5);
+      yut.rotationSpeed = (Math.random() - 0.4) * 0.5;
+      yut.fixedFaceUp = fixedResult[i];
+    });
   };
 
   return (
@@ -70,66 +151,36 @@ export default function YutThrowArea({
         <h2 className="text-xl font-bold">이진수 윷 던지기</h2>
         <div className="flex items-center">
           {currentPlayer.id === 1 ? (
-            <Image width="28" height="28" src="/images/animals/item1.svg" alt="테스트 이미지" />
+            <NextImage width="28" height="28" src="/images/animals/item1.svg" alt="테스트 이미지" />
           ) : (
-            <Image width="28" height="28" src="/images/animals/item2.svg" alt="테스트 이미지" />
+            <NextImage width="28" height="28" src="/images/animals/item2.svg" alt="테스트 이미지" />
           )}
           <span>{currentPlayer?.name || "플레이어"} 차례</span>
         </div>
       </div>
 
       <div className="flex flex-col items-center justify-center py-4">
-        <div className="mb-4 flex space-x-4 justify-center">
-          {isAnimating
-            ? // 애니메이션 중인 윷
-              Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div
-                    key={`anim-${index}`}
-                    className={`w-8 h-28 sm:w-10 sm:h-32 rounded-full bg-gray-200 transform transition-all duration-150 ${
-                      animationStage === index ? "scale-95 bg-gray-300" : ""
-                    }`}
-                  ></div>
-                ))
-            : yutResult.length > 0
-            ? // 결과가 있는 경우
-              yutResult.map((value, index) => (
-                <div
-                  key={`result-${index}`}
-                  className={`w-8 h-28 sm:w-10 sm:h-32 rounded-full ${
-                    value === 1 ? "bg-blue-900" : "bg-gray-300"
-                  } flex items-center justify-center text-white font-bold`}
-                >
-                  {value}
-                </div>
-              ))
-            : // 초기 상태
-              Array(4)
-                .fill(0)
-                .map((_, index) => (
-                  <div
-                    key={`init-${index}`}
-                    className="w-8 h-28 sm:w-10 sm:h-32 rounded-full bg-gray-200"
-                  ></div>
-                ))}
-        </div>
+        <div className=" flex space-x-4 justify-center">
+          <div className="relative flex flex-col items-center">
+            <canvas ref={canvasRef} style={{ display: "block", width: "100%", height: "100%" }} />
+            <Button
+              onClick={throwYuts}
+              disabled={isAnimating}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-lg w-40"
+            >
+              {isAnimating ? "던지는 중..." : "윷 던지기"}
+            </Button>
 
-        <Button
-          onClick={throwYut}
-          disabled={isAnimating}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-md text-lg w-40"
-        >
-          {isAnimating ? "던지는 중..." : "윷 던지기"}
-        </Button>
-
-        {yutResult.length > 0 && !isAnimating && (
-          <div className="mt-2 text-center">
-            <p className="text-lg">
-              이진수 결과: <span className="font-bold">{yutResult.join("")}</span>
-            </p>
+            {!isAnimating && (
+              <div className="mt-2 text-center">
+                <p className="text-lg">
+                  이진수 결과:
+                  <span className="font-bold">{binaryResult}</span>
+                </p>
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );
