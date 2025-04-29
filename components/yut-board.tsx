@@ -80,18 +80,20 @@ export default function YutBoard({ players, onRestartGame }: YutBoardProps) {
 
       <div className="flex relative">
         <Image
-          width="28"
-          height="28"
+          id="item1"
+          width="48"
+          height="48"
           src="/images/animals/item1.svg"
           alt="테스트 이미지"
-          className="absolute top-3 left-4"
+          className="absolute top-3 left-4 transition-transform duration-1000"
         />
         <Image
-          width="28"
-          height="28"
+          id="item2"
+          width="48"
+          height="48"
           src="/images/animals/item2.svg"
           alt="테스트 이미지"
-          className="absolute top-3 left-14"
+          className="absolute top-3 left-16 transition-transform duration-1000"
         />
         <Image src="/images/yut.png" alt="말판" width={800} height={500} />
       </div>

@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss"
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   darkMode: ["class"],
@@ -88,6 +88,14 @@ const config: Config = {
             height: "0",
           },
         },
+        "move-box1": {
+          from: {
+            transform: " translate(0, 0)",
+          },
+          to: {
+            transform: "translate(300px, 0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -96,5 +104,5 @@ const config: Config = {
     },
   },
   plugins: [],
-}
-export default config
+};
+export default config;

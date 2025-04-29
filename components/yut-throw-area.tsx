@@ -171,7 +171,7 @@ export default function YutThrowArea({
               {isAnimating ? "던지는 중..." : "윷 던지기"}
             </Button>
 
-            {!isAnimating && (
+            {binaryResult && !isAnimating && (
               <div className="mt-2 text-center">
                 <p className="text-lg">
                   이진수 결과:
