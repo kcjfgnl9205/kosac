@@ -336,40 +336,37 @@ export default function Lesson13Page() {
         </div>
 
         {/* Semi-transparent container with blur effect - moved down by 60px */}
-        <div className="relative z-10 flex items-center justify-center  h-full pt-48 pb-40 px-16">
+        <div className="relative z-10 flex items-center justify-center  h-full py-32 px-16">
           <div
-            className="w-full h-full  p-20 flex flex-col relative"
+            className="w-full h-full p-20 flex flex-col relative gap-4"
             tabIndex={0}
             onKeyDown={handleKeyPress}
           >
             {!isSelectionPhase ? (
               // Introduction phase (Steps 1-5)
               <>
-                {/* Progress indicator */}
-                <div className="absolute top-4 right-6 text-white font-medium">
-                  {currentStep}/{totalSteps}
+                <div className="absolute top-12 right-48 text-white font-medium text-lg">
+                  {currentStep} / {totalSteps}
                 </div>
+                <div className="flex flex-col items-center h-full justify-center relative w-full gap-12">
+                  <h1 className="text-[#5DFDCB] text-5xl font-bold text-center drop-shadow-md">
+                    시작하기
+                  </h1>
 
-                {/* Title - always at the top */}
-                <h1 className="text-[#5DFDCB] text-5xl font-bold mb-6 text-center drop-shadow-md">
-                  시작하기
-                </h1>
+                  <div className="flex items-center justify-center">
+                    <p className="text-white text-center text-3xl whitespace-pre-line drop-shadow-md">
+                      {stepContents[currentStep - 1]}
+                    </p>
+                  </div>
 
-                {/* Content - flexible height */}
-                <div className="flex-grow flex items-center justify-center">
-                  <p className="text-white text-center text-2xl whitespace-pre-line drop-shadow-md">
-                    {stepContents[currentStep - 1]}
-                  </p>
-                </div>
-
-                {/* Button - always at the bottom */}
-                <div className="mt-6 flex justify-center">
-                  <Button
-                    onClick={handleNextStep}
-                    className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
-                  >
-                    {currentStep === totalSteps ? "완료" : "확인"}
-                  </Button>
+                  <div className="mt-6 flex justify-center">
+                    <Button
+                      onClick={handleNextStep}
+                      className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-12 py-4 rounded-full text-2xl font-medium shadow-lg transition-all hover:scale-105 h-16"
+                    >
+                      {currentStep === totalSteps ? "완료" : "확인"}
+                    </Button>
+                  </div>
                 </div>
               </>
             ) : isQuizCompleted ? (
@@ -378,30 +375,29 @@ export default function Lesson13Page() {
                   // Summary phase (Steps 1-5)
                   <>
                     {/* Progress indicator */}
-                    <div className="absolute top-4 right-6 text-white font-medium">
+                    <div className="absolute top-12 right-48 text-white font-medium text-lg">
                       {currentSummaryStep}/{totalSummarySteps}
                     </div>
+                    <div className="flex flex-col items-center h-full justify-center relative w-full gap-12">
+                      <h1 className="text-[#5DFDCB] text-5xl font-bold text-center drop-shadow-md">
+                        정리하기
+                      </h1>
 
-                    {/* Title - always at the top */}
-                    <h1 className="text-[#5DFDCB] text-4xl font-bold mb-4 text-center drop-shadow-md">
-                      정리하기
-                    </h1>
+                      <div className="flex items-center justify-center">
+                        <p className="text-white text-center text-3xl whitespace-pre-line drop-shadow-md">
+                          {summaryContents[currentSummaryStep - 1]}
+                        </p>
+                      </div>
 
-                    {/* Content - flexible height */}
-                    <div className="flex-grow flex items-center justify-center">
-                      <p className="text-white text-center text-2xl whitespace-pre-line drop-shadow-md">
-                        {summaryContents[currentSummaryStep - 1]}
-                      </p>
-                    </div>
-
-                    {/* Button - always at the bottom */}
-                    <div className="mt-4 flex justify-center">
-                      <Button
-                        onClick={handleNextSummaryStep}
-                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
-                      >
-                        {currentSummaryStep === totalSummarySteps ? "완료" : "확인"}
-                      </Button>
+                      {/* Button - always at the bottom */}
+                      <div className="mt-4 flex justify-center">
+                        <Button
+                          onClick={handleNextSummaryStep}
+                          className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-12 py-4 rounded-full text-2xl font-medium shadow-lg transition-all hover:scale-105 h-16"
+                        >
+                          {currentSummaryStep === totalSummarySteps ? "완료" : "확인"}
+                        </Button>
+                      </div>
                     </div>
                   </>
                 ) : (
@@ -425,7 +421,7 @@ export default function Lesson13Page() {
                           </p>
                         </div>
                       ) : (
-                        <p className="text-white/70 text-center text-3xl whitespace-pre-line drop-shadow-md">
+                        <p className="text-white/70 text-center text-4xl whitespace-pre-line drop-shadow-md">
                           이미지를 끌고오면 인공지능이 해당 꽃이 씨를 퍼트리는 방법을 알려줍니다.
                         </p>
                       )}
@@ -436,7 +432,7 @@ export default function Lesson13Page() {
                       {[...testImages].reverse().map((image) => (
                         <div
                           key={image.id}
-                          className="relative w-[230px] h-[150px] cursor-move hover:scale-105 transition-transform"
+                          className="relative w-[300px] h-[200px] cursor-move hover:scale-105 transition-transform"
                           draggable
                           onDragStart={(e) => handleDragStart(e, image)}
                         >
@@ -485,7 +481,7 @@ export default function Lesson13Page() {
                   {isLoading ? (
                     // Loading animation
                     <>
-                      <h1 className="text-white text-3xl font-bold mb-8 text-center drop-shadow-md">
+                      <h1 className="text-white text-4xl font-bold mb-8 text-center drop-shadow-md">
                         이제 인공지능이 학습을 시작합니다.
                       </h1>
                       <div className="animate-spin">
@@ -495,15 +491,15 @@ export default function Lesson13Page() {
                   ) : (
                     // Completion message
                     <>
-                      <h1 className="text-[#5DFDCB] text-4xl font-bold mb-6 text-center drop-shadow-md">
+                      <h1 className="text-[#5DFDCB] text-5xl font-bold mb-8 text-center drop-shadow-md">
                         인공지능 학습완료!
                       </h1>
-                      <p className="text-white text-center text-2xl mb-8 whitespace-pre-line drop-shadow-md">
+                      <p className="text-white text-center text-3xl mb-12 whitespace-pre-line drop-shadow-md">
                         이제 꽃이 씨를 퍼트리는 방법을 인공지능이 알려줍니다.
                       </p>
                       <Button
                         onClick={handleCompletionConfirm}
-                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
+                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-12 py-4 rounded-full text-2xl font-medium shadow-lg transition-all hover:scale-105 h-12"
                       >
                         확인
                       </Button>
@@ -513,10 +509,10 @@ export default function Lesson13Page() {
               )
             ) : (
               // Selection phase (quiz)
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col h-full gap-4">
                 {/* Top section (2/3 of height) - Flower Image */}
                 <div className="flex-grow flex items-center justify-center">
-                  <div className="relative w-[400px] h-[200px] -mt-[20px]">
+                  <div className="relative w-1/2 h-[90%] mt-6">
                     <Image
                       src={currentFlower.imagePath || "/placeholder.svg"}
                       alt={currentFlower.koreanName}
@@ -526,22 +522,17 @@ export default function Lesson13Page() {
                   </div>
                 </div>
 
-                {/* Bottom section (1/3 of height) */}
-                <div
-                  className="border-t border-white/30 pt-2 flex flex-col justify-between overflow-hidden"
-                  style={{ maxHeight: "94px" }}
-                >
-                  {/* Instruction text */}
-                  <p className="text-white text-center mb-2 drop-shadow-md text-xl">
+                <div className="border-t border-white/30 pt-8 flex flex-col justify-between overflow-hidden">
+                  <p className="text-white text-center mb-8 drop-shadow-md text-2xl ">
                     이 꽃이 씨를 퍼트리는 방법을 선택하세요.
                   </p>
 
                   {/* Selection buttons */}
-                  <div className="flex justify-center space-x-4 mb-2">
+                  <div className="flex justify-center space-x-4 mb-4 ">
                     <Button
                       onClick={() => handleSelection("수매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
+                      className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-12 py-4 h-12 rounded-md shadow-md transition-all hover:scale-105 text-2xl ${
                         selectedAnswer === "수매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -550,7 +541,7 @@ export default function Lesson13Page() {
                     <Button
                       onClick={() => handleSelection("조매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
+                      className={`bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-12 py-4 h-12 rounded-md shadow-md transition-all hover:scale-105 text-2xl ${
                         selectedAnswer === "조매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -559,7 +550,7 @@ export default function Lesson13Page() {
                     <Button
                       onClick={() => handleSelection("충매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
+                      className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-12 py-4 h-12 rounded-md shadow-md transition-all hover:scale-105 text-2xl ${
                         selectedAnswer === "충매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -573,18 +564,18 @@ export default function Lesson13Page() {
             {/* Popup for feedback */}
             {showPopup && (
               <div className="absolute inset-0 flex items-center justify-center rounded-lg z-20">
-                <div className="bg-white p-16 rounded-lg shadow-lg max-w-[80%] text-center">
-                  <p className="text-4xl font-bold mb-4">
+                <div className="bg-white py-12 px-12 rounded-lg shadow-lg max-w-[80%] text-center">
+                  <p className="text-4xl font-bold mb-6">
                     {isCorrect ? "정답입니다!" : "다시 한 번 생각해 보세요."}
                   </p>
-                  <p className="text-lg mb-6">
+                  <p className="text-2xl mb-6">
                     {isCorrect
                       ? currentFlower.char
                       : "잘못된 라벨링은 인공지능이 잘못된 학습을 하게 됩니다."}
                   </p>
                   <Button
                     onClick={handlePopupClose}
-                    className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-4 py-2 rounded-md text-lg"
+                    className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-12 py-4 rounded-md text-xl "
                   >
                     {isCorrect ? "다음" : "확인"}
                   </Button>
