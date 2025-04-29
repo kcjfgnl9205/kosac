@@ -1,53 +1,53 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect, type KeyboardEvent, useRef } from "react"
-import { useRouter } from "next/navigation"
-import Image from "next/image"
-import Sidebar from "@/components/sidebar"
-import { Button } from "@/components/ui/button"
-import { Settings } from "lucide-react"
+import { useState, useEffect, type KeyboardEvent, useRef } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import Sidebar from "@/components/sidebar";
+import { Button } from "@/components/ui/button";
+import { Settings } from "lucide-react";
 
 // 꽃 데이터 정의
 interface FlowerData {
-  id: number
-  name: string
-  koreanName: string
-  correctAnswer: string
-  imagePath: string
-  char: string
+  id: number;
+  name: string;
+  koreanName: string;
+  correctAnswer: string;
+  imagePath: string;
+  char: string;
 }
 
 // 테스트 이미지 정의
 interface TestImage {
-  id: number
-  name: string
-  path: string
-  result: string
+  id: number;
+  name: string;
+  path: string;
+  result: string;
 }
 
 export default function Lesson13Page() {
-  const router = useRouter()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [currentStep, setCurrentStep] = useState(1)
-  const [currentSummaryStep, setCurrentSummaryStep] = useState(1)
-  const [isSelectionPhase, setIsSelectionPhase] = useState(false)
-  const [currentFlowerIndex, setCurrentFlowerIndex] = useState(0)
-  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
-  const [isCorrect, setIsCorrect] = useState(false)
-  const [showPopup, setShowPopup] = useState(false)
-  const [isQuizCompleted, setIsQuizCompleted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [loadingComplete, setLoadingComplete] = useState(false)
-  const [isTestPhase, setIsTestPhase] = useState(false)
-  const [draggedImage, setDraggedImage] = useState<TestImage | null>(null)
-  const [showResult, setShowResult] = useState(false)
-  const [showErrorPopup, setShowErrorPopup] = useState(false)
-  const [isSummaryPhase, setIsSummaryPhase] = useState(false)
-  const dropZoneRef = useRef<HTMLDivElement>(null)
-  const totalSteps = 5
-  const totalSummarySteps = 5
+  const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [currentSummaryStep, setCurrentSummaryStep] = useState(1);
+  const [isSelectionPhase, setIsSelectionPhase] = useState(false);
+  const [currentFlowerIndex, setCurrentFlowerIndex] = useState(0);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [isQuizCompleted, setIsQuizCompleted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadingComplete, setLoadingComplete] = useState(false);
+  const [isTestPhase, setIsTestPhase] = useState(false);
+  const [draggedImage, setDraggedImage] = useState<TestImage | null>(null);
+  const [showResult, setShowResult] = useState(false);
+  const [showErrorPopup, setShowErrorPopup] = useState(false);
+  const [isSummaryPhase, setIsSummaryPhase] = useState(false);
+  const dropZoneRef = useRef<HTMLDivElement>(null);
+  const totalSteps = 5;
+  const totalSummarySteps = 5;
 
   // 꽃 데이터 배열 - 파일명에서 정보 추출
   const flowers: FlowerData[] = [
@@ -75,7 +75,7 @@ export default function Lesson13Page() {
       imagePath: "/images/camellia.png",
       char: "새의 눈이 빨간색과 분홍색을 유난히 잘보기 때문에 빨간색과 분홍색 꽃이 많습니다.",
     },
-  ]
+  ];
 
   // 테스트 이미지 배열
   const testImages: TestImage[] = [
@@ -91,11 +91,11 @@ export default function Lesson13Page() {
       path: "/images/forsythia-yellow.jpeg",
       result: "충매화",
     },
-  ]
+  ];
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   // Step content with line breaks
   const stepContents = [
@@ -104,7 +104,7 @@ export default function Lesson13Page() {
     "꽃을 보고 해당 꽃이 씨를 어떻게 퍼트리는지\n알맞게 라벨링 해주세요.",
     "인공지능이 학습을 완료하고 나면 꽃 사진을 선택했을 때\n씨를 어떻게 퍼트리는지 인공지능이 알려줍니다.",
     "이제 꽃이 씨를 퍼트리는 방법을 분류해 주는\n인공지능을 만들어 봅시다.",
-  ]
+  ];
 
   // Summary content with line breaks
   const summaryContents = [
@@ -113,61 +113,61 @@ export default function Lesson13Page() {
     "학습이 완료되고 나면 테스트를 통해\n인공지능이 얼마나 똑똑한지 확인할 수 있어요.",
     "그런데 인공지능은 배운 것만 말할 수 있어요. \n민들레는 풍매화지만 인공지능에게 풍매화는 학습 시키지 않았기 때문에\n배운 것 중에 하나를 말하게 됩니다.",
     "인공지능은 반드시 배운 것만 말해요.\n잘못 배우면 잘못된 답을 내놓게 됩니다.",
-  ]
+  ];
 
   // Handle next step
   const handleNextStep = () => {
     if (currentStep < totalSteps) {
-      setCurrentStep(currentStep + 1)
+      setCurrentStep(currentStep + 1);
     } else {
       // After the 5th step, move to selection phase
-      setIsSelectionPhase(true)
+      setIsSelectionPhase(true);
     }
-  }
+  };
 
   // Handle next summary step
   const handleNextSummaryStep = () => {
     if (currentSummaryStep < totalSummarySteps) {
-      setCurrentSummaryStep(currentSummaryStep + 1)
+      setCurrentSummaryStep(currentSummaryStep + 1);
     } else {
       // After the 5th summary step, return to main page
-      router.push("/")
+      router.push("/");
     }
-  }
+  };
 
   // Handle completion confirmation
   const handleCompletionConfirm = () => {
-    console.log("학습 완료 확인!")
-    setIsTestPhase(true)
-  }
+    console.log("학습 완료 확인!");
+    setIsTestPhase(true);
+  };
 
   // Handle key press for Enter key
   const handleKeyPress = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter") {
       if (!isSelectionPhase) {
         // Introduction phase - next step
-        handleNextStep()
+        handleNextStep();
       } else if (isQuizCompleted && loadingComplete && !isTestPhase) {
         // Completion phase - confirm completion
-        handleCompletionConfirm()
+        handleCompletionConfirm();
       } else if (isQuizCompleted && isLoading) {
         // Loading phase - do nothing for now
-        return
+        return;
       } else if (isSummaryPhase) {
         // Summary phase - next step
-        handleNextSummaryStep()
+        handleNextSummaryStep();
       } else if (showPopup) {
         // If popup is shown, close it
-        handlePopupClose()
+        handlePopupClose();
       } else if (showErrorPopup) {
         // If error popup is shown, continue
-        handleContinue()
+        handleContinue();
       } else if (!showPopup && selectedAnswer) {
         // If answer is selected but popup is not shown, validate the answer
-        handleSelection(selectedAnswer)
+        handleSelection(selectedAnswer);
       }
     }
-  }
+  };
 
   // Add event listener for Enter key
   useEffect(() => {
@@ -175,33 +175,33 @@ export default function Lesson13Page() {
       if (e.key === "Enter") {
         if (!isSelectionPhase) {
           // Introduction phase - next step
-          handleNextStep()
+          handleNextStep();
         } else if (isQuizCompleted && loadingComplete && !isTestPhase) {
           // Completion phase - confirm completion
-          handleCompletionConfirm()
+          handleCompletionConfirm();
         } else if (isQuizCompleted && isLoading) {
           // Loading phase - do nothing for now
-          return
+          return;
         } else if (isSummaryPhase) {
           // Summary phase - next step
-          handleNextSummaryStep()
+          handleNextSummaryStep();
         } else if (showPopup) {
           // If popup is shown, close it
-          handlePopupClose()
+          handlePopupClose();
         } else if (showErrorPopup) {
           // If error popup is shown, continue
-          handleContinue()
+          handleContinue();
         } else if (!showPopup && selectedAnswer) {
           // If answer is selected but popup is not shown, validate the answer
-          handleSelection(selectedAnswer)
+          handleSelection(selectedAnswer);
         }
       }
-    }
+    };
 
-    window.addEventListener("keydown", handleGlobalKeyPress)
+    window.addEventListener("keydown", handleGlobalKeyPress);
     return () => {
-      window.removeEventListener("keydown", handleGlobalKeyPress)
-    }
+      window.removeEventListener("keydown", handleGlobalKeyPress);
+    };
   }, [
     currentStep,
     currentSummaryStep,
@@ -214,98 +214,98 @@ export default function Lesson13Page() {
     selectedAnswer,
     isTestPhase,
     isSummaryPhase,
-  ])
+  ]);
 
   // Handle selection of seed dispersal method
   const handleSelection = (method: string) => {
-    setSelectedAnswer(method)
+    setSelectedAnswer(method);
 
-    const currentFlower = flowers[currentFlowerIndex]
-    const isAnswerCorrect = method === currentFlower.correctAnswer
+    const currentFlower = flowers[currentFlowerIndex];
+    const isAnswerCorrect = method === currentFlower.correctAnswer;
 
-    setIsCorrect(isAnswerCorrect)
-    setShowPopup(true)
-  }
+    setIsCorrect(isAnswerCorrect);
+    setShowPopup(true);
+  };
 
   // Handle popup close
   const handlePopupClose = () => {
-    setShowPopup(false)
+    setShowPopup(false);
 
     // If answer was correct, move to next flower
     if (isCorrect && currentFlowerIndex < flowers.length - 1) {
-      setCurrentFlowerIndex(currentFlowerIndex + 1)
-      setSelectedAnswer(null)
+      setCurrentFlowerIndex(currentFlowerIndex + 1);
+      setSelectedAnswer(null);
     } else if (isCorrect && currentFlowerIndex === flowers.length - 1) {
       // All flowers completed - show loading screen
-      setIsQuizCompleted(true)
-      setIsLoading(true)
+      setIsQuizCompleted(true);
+      setIsLoading(true);
 
       // After 4 seconds, show completion message
       setTimeout(() => {
-        setIsLoading(false)
-        setLoadingComplete(true)
-      }, 4000)
+        setIsLoading(false);
+        setLoadingComplete(true);
+      }, 4000);
     }
-  }
+  };
 
   // Handle drag start
   const handleDragStart = (e: React.DragEvent<HTMLDivElement>, image: TestImage) => {
-    setDraggedImage(image)
-    e.dataTransfer.setData("text/plain", image.id.toString())
-  }
+    setDraggedImage(image);
+    e.dataTransfer.setData("text/plain", image.id.toString());
+  };
 
   // Handle drag over
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.add("bg-white/20")
+      dropZoneRef.current.classList.add("bg-white/20");
     }
-  }
+  };
 
   // Handle drag leave
   const handleDragLeave = () => {
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.remove("bg-white/20")
+      dropZoneRef.current.classList.remove("bg-white/20");
     }
-  }
+  };
 
   // Handle drop
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     if (dropZoneRef.current) {
-      dropZoneRef.current.classList.remove("bg-white/20")
+      dropZoneRef.current.classList.remove("bg-white/20");
     }
 
     if (draggedImage) {
-      setShowResult(true)
+      setShowResult(true);
 
       // If the dandelion image is dropped, show error popup after 1 second
       if (draggedImage.name.includes("민들레")) {
         setTimeout(() => {
-          setShowErrorPopup(true)
-        }, 1000)
+          setShowErrorPopup(true);
+        }, 1000);
       }
     }
-  }
+  };
 
   // Handle continue button in error popup
   const handleContinue = () => {
-    setShowErrorPopup(false)
-    setShowResult(false)
-    setDraggedImage(null)
-  }
+    setShowErrorPopup(false);
+    setShowResult(false);
+    setDraggedImage(null);
+  };
 
   // Handle next button in error popup
   const handleNext = () => {
-    setShowErrorPopup(false)
-    setIsSummaryPhase(true)
-  }
+    setShowErrorPopup(false);
+    setIsSummaryPhase(true);
+  };
 
   // Get current flower
-  const currentFlower = flowers[currentFlowerIndex]
+  const currentFlower = flowers[currentFlowerIndex];
 
   return (
-    <main className="flex min-h-screen">
+    <main className="flex flex-1">
       <Sidebar
         isOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
@@ -315,9 +315,9 @@ export default function Lesson13Page() {
           if (lesson !== 6) {
             // 변경: 이전 13차시가 이제 6차시
             if (lesson === 2) {
-              router.push("/yut-game")
+              router.push("/yut-game");
             } else {
-              router.push("/")
+              router.push("/");
             }
           }
         }}
@@ -326,13 +326,19 @@ export default function Lesson13Page() {
       <div className="flex-1 relative overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <Image src="/images/lesson-13-bg.png" alt="배운 것만 말해요 배경" fill className="object-cover" priority />
+          <Image
+            src="/images/lesson-13-bg.png"
+            alt="배운 것만 말해요 배경"
+            fill
+            className="object-cover"
+            priority
+          />
         </div>
 
         {/* Semi-transparent container with blur effect - moved down by 60px */}
-        <div className="relative z-10 flex items-center justify-center min-h-screen pt-[60px]">
+        <div className="relative z-10 flex items-center justify-center  h-full pt-48 pb-40 px-16">
           <div
-            className="w-[600px] h-[300px] bg-white/30 backdrop-blur-sm rounded-lg border border-white/50 shadow-lg p-6 flex flex-col relative"
+            className="w-full h-full  p-20 flex flex-col relative"
             tabIndex={0}
             onKeyDown={handleKeyPress}
           >
@@ -345,11 +351,13 @@ export default function Lesson13Page() {
                 </div>
 
                 {/* Title - always at the top */}
-                <h1 className="text-[#5DFDCB] text-3xl font-bold mb-6 text-center drop-shadow-md">시작하기</h1>
+                <h1 className="text-[#5DFDCB] text-5xl font-bold mb-6 text-center drop-shadow-md">
+                  시작하기
+                </h1>
 
                 {/* Content - flexible height */}
                 <div className="flex-grow flex items-center justify-center">
-                  <p className="text-white text-center text-lg whitespace-pre-line drop-shadow-md">
+                  <p className="text-white text-center text-2xl whitespace-pre-line drop-shadow-md">
                     {stepContents[currentStep - 1]}
                   </p>
                 </div>
@@ -358,7 +366,7 @@ export default function Lesson13Page() {
                 <div className="mt-6 flex justify-center">
                   <Button
                     onClick={handleNextStep}
-                    className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-lg font-medium shadow-lg transition-all hover:scale-105"
+                    className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
                   >
                     {currentStep === totalSteps ? "완료" : "확인"}
                   </Button>
@@ -375,20 +383,22 @@ export default function Lesson13Page() {
                     </div>
 
                     {/* Title - always at the top */}
-                    <h1 className="text-[#5DFDCB] text-3xl font-bold mb-6 text-center drop-shadow-md">정리하기</h1>
+                    <h1 className="text-[#5DFDCB] text-4xl font-bold mb-4 text-center drop-shadow-md">
+                      정리하기
+                    </h1>
 
                     {/* Content - flexible height */}
                     <div className="flex-grow flex items-center justify-center">
-                      <p className="text-white text-center text-lg whitespace-pre-line drop-shadow-md">
+                      <p className="text-white text-center text-2xl whitespace-pre-line drop-shadow-md">
                         {summaryContents[currentSummaryStep - 1]}
                       </p>
                     </div>
 
                     {/* Button - always at the bottom */}
-                    <div className="mt-6 flex justify-center">
+                    <div className="mt-4 flex justify-center">
                       <Button
                         onClick={handleNextSummaryStep}
-                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-lg font-medium shadow-lg transition-all hover:scale-105"
+                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
                       >
                         {currentSummaryStep === totalSummarySteps ? "완료" : "확인"}
                       </Button>
@@ -410,10 +420,12 @@ export default function Lesson13Page() {
                           <h2 className="text-[#5DFDCB] text-3xl font-bold mb-2 drop-shadow-md">
                             {draggedImage.result}
                           </h2>
-                          <p className="text-white text-lg">이 꽃은 {draggedImage.result} 방식으로 씨를 퍼트립니다.</p>
+                          <p className="text-white text-lg">
+                            이 꽃은 {draggedImage.result} 방식으로 씨를 퍼트립니다.
+                          </p>
                         </div>
                       ) : (
-                        <p className="text-white/70 text-center text-lg whitespace-pre-line drop-shadow-md">
+                        <p className="text-white/70 text-center text-3xl whitespace-pre-line drop-shadow-md">
                           이미지를 끌고오면 인공지능이 해당 꽃이 씨를 퍼트리는 방법을 알려줍니다.
                         </p>
                       )}
@@ -441,19 +453,23 @@ export default function Lesson13Page() {
                     {/* Error popup for dandelion */}
                     {showErrorPopup && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg z-30">
-                        <div className="bg-white p-5 rounded-lg shadow-lg max-w-[80%] text-center">
-                          <p className="text-xl font-bold mb-3 text-red-500">인공지능이 틀렸어요!</p>
-                          <p className="text-lg mb-4">민들레는 풍매화예요. 인공지능은 왜 수매화라고 답했을까요?</p>
+                        <div className="bg-white p-12 rounded-lg shadow-lg max-w-[80%] text-center">
+                          <p className="text-3xl font-bold mb-6 text-red-500">
+                            인공지능이 틀렸어요!
+                          </p>
+                          <p className="text-xl mb-6">
+                            민들레는 풍매화예요. 인공지능은 왜 수매화라고 답했을까요?
+                          </p>
                           <div className="flex justify-center space-x-4">
                             <Button
                               onClick={handleContinue}
-                              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
+                              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-lg"
                             >
                               계속하기
                             </Button>
                             <Button
                               onClick={handleNext}
-                              className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-4 py-2 rounded-md"
+                              className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-4 py-2 rounded-md text-lg"
                             >
                               다음으로
                             </Button>
@@ -469,7 +485,7 @@ export default function Lesson13Page() {
                   {isLoading ? (
                     // Loading animation
                     <>
-                      <h1 className="text-white text-2xl font-bold mb-8 text-center drop-shadow-md">
+                      <h1 className="text-white text-3xl font-bold mb-8 text-center drop-shadow-md">
                         이제 인공지능이 학습을 시작합니다.
                       </h1>
                       <div className="animate-spin">
@@ -479,15 +495,15 @@ export default function Lesson13Page() {
                   ) : (
                     // Completion message
                     <>
-                      <h1 className="text-[#5DFDCB] text-3xl font-bold mb-6 text-center drop-shadow-md">
+                      <h1 className="text-[#5DFDCB] text-4xl font-bold mb-6 text-center drop-shadow-md">
                         인공지능 학습완료!
                       </h1>
-                      <p className="text-white text-center text-lg mb-8 whitespace-pre-line drop-shadow-md">
+                      <p className="text-white text-center text-2xl mb-8 whitespace-pre-line drop-shadow-md">
                         이제 꽃이 씨를 퍼트리는 방법을 인공지능이 알려줍니다.
                       </p>
                       <Button
                         onClick={handleCompletionConfirm}
-                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-lg font-medium shadow-lg transition-all hover:scale-105"
+                        className="bg-gradient-to-r from-[#5DFDCB] to-[#5DFDCB]/70 hover:from-[#5DFDCB]/90 hover:to-[#5DFDCB]/60 text-black px-8 py-2 rounded-full text-xl font-medium shadow-lg transition-all hover:scale-105"
                       >
                         확인
                       </Button>
@@ -500,7 +516,7 @@ export default function Lesson13Page() {
               <div className="flex flex-col h-full">
                 {/* Top section (2/3 of height) - Flower Image */}
                 <div className="flex-grow flex items-center justify-center">
-                  <div className="relative w-[300px] h-[150px] -mt-[20px]">
+                  <div className="relative w-[400px] h-[200px] -mt-[20px]">
                     <Image
                       src={currentFlower.imagePath || "/placeholder.svg"}
                       alt={currentFlower.koreanName}
@@ -516,7 +532,7 @@ export default function Lesson13Page() {
                   style={{ maxHeight: "94px" }}
                 >
                   {/* Instruction text */}
-                  <p className="text-white text-center mb-2 drop-shadow-md text-sm">
+                  <p className="text-white text-center mb-2 drop-shadow-md text-xl">
                     이 꽃이 씨를 퍼트리는 방법을 선택하세요.
                   </p>
 
@@ -525,7 +541,7 @@ export default function Lesson13Page() {
                     <Button
                       onClick={() => handleSelection("수매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-sm ${
+                      className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
                         selectedAnswer === "수매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -534,7 +550,7 @@ export default function Lesson13Page() {
                     <Button
                       onClick={() => handleSelection("조매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-sm ${
+                      className={`bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
                         selectedAnswer === "조매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -543,7 +559,7 @@ export default function Lesson13Page() {
                     <Button
                       onClick={() => handleSelection("충매화")}
                       disabled={isCorrect && showPopup}
-                      className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-sm ${
+                      className={`bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white px-4 py-1 rounded-md shadow-md transition-all hover:scale-105 text-lg ${
                         selectedAnswer === "충매화" ? "ring-2 ring-white" : ""
                       }`}
                     >
@@ -556,15 +572,19 @@ export default function Lesson13Page() {
 
             {/* Popup for feedback */}
             {showPopup && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg z-20">
-                <div className="bg-white p-4 rounded-lg shadow-lg max-w-[80%] text-center">
-                  <p className="text-xl font-bold mb-2">{isCorrect ? "정답입니다!" : "다시 한 번 생각해 보세요."}</p>
-                  <p className="text-xs mb-3">
-                    {isCorrect ? currentFlower.char : "잘못된 라벨링은 인공지능이 잘못된 학습을 하게 됩니다."}
+              <div className="absolute inset-0 flex items-center justify-center rounded-lg z-20">
+                <div className="bg-white p-16 rounded-lg shadow-lg max-w-[80%] text-center">
+                  <p className="text-4xl font-bold mb-4">
+                    {isCorrect ? "정답입니다!" : "다시 한 번 생각해 보세요."}
+                  </p>
+                  <p className="text-lg mb-6">
+                    {isCorrect
+                      ? currentFlower.char
+                      : "잘못된 라벨링은 인공지능이 잘못된 학습을 하게 됩니다."}
                   </p>
                   <Button
                     onClick={handlePopupClose}
-                    className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-4 py-2 rounded-md"
+                    className="bg-[#5DFDCB] hover:bg-[#5DFDCB]/80 text-black px-4 py-2 rounded-md text-lg"
                   >
                     {isCorrect ? "다음" : "확인"}
                   </Button>
@@ -575,5 +595,5 @@ export default function Lesson13Page() {
         </div>
       </div>
     </main>
-  )
+  );
 }

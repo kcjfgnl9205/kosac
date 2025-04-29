@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Sidebar from "@/components/sidebar"
-import MainContent from "@/components/main-content"
+import { useState } from "react";
+import Sidebar from "@/components/sidebar";
+import MainContent from "@/components/main-content";
 
 export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [selectedLesson, setSelectedLesson] = useState(2) // 기본값으로 2차시 선택
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [selectedLesson, setSelectedLesson] = useState(2); // 기본값으로 2차시 선택
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
-    <main className="flex min-h-screen">
+    <main className="flex flex-1">
       <Sidebar
         isOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
@@ -22,5 +22,5 @@ export default function Home() {
       />
       <MainContent selectedLesson={selectedLesson} />
     </main>
-  )
+  );
 }
