@@ -1,60 +1,63 @@
-"use client"
+"use client";
 
-import { useState, useCallback } from "react"
-import { useRouter } from "next/navigation"
-import Sidebar from "@/components/sidebar"
-import ScheduleForm from "@/components/schedule-form"
-import ScheduleVisualization from "@/components/schedule-visualization"
-import ScheduleList from "@/components/schedule-list"
-import type { ScheduleItem } from "@/types/schedule"
+import { useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import Sidebar from "@/components/sidebar";
+import ScheduleForm from "@/components/schedule-form";
+import ScheduleVisualization from "@/components/schedule-visualization";
+import ScheduleList from "@/components/schedule-list";
+import type { ScheduleItem } from "@/types/schedule";
 
 export default function SchedulePlannerPage() {
-  const router = useRouter()
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const [schedules, setSchedules] = useState<ScheduleItem[]>([])
-  const [activeTab, setActiveTab] = useState<"form" | "list">("form")
-  const [activeVisualizationTab, setActiveVisualizationTab] = useState<"clock" | "chart">("clock")
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
-  const [analysisResult, setAnalysisResult] = useState<string | null>(null)
+  const router = useRouter();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [schedules, setSchedules] = useState<ScheduleItem[]>([]);
+  const [activeTab, setActiveTab] = useState<"form" | "list">("form");
+  const [activeVisualizationTab, setActiveVisualizationTab] = useState<"clock" | "chart">("clock");
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisResult, setAnalysisResult] = useState<string | null>(null);
+  const [count, setCount] = useState(1);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen)
-  }
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   const handleAddSchedule = (schedule: ScheduleItem) => {
     // 겹치는 일정 확인
     const isOverlapping = schedules.some((existingSchedule) => {
       return (
-        (schedule.startHour < existingSchedule.endHour && schedule.endHour > existingSchedule.startHour) ||
-        (existingSchedule.startHour < schedule.endHour && existingSchedule.endHour > schedule.startHour)
-      )
-    })
+        (schedule.startHour < existingSchedule.endHour &&
+          schedule.endHour > existingSchedule.startHour) ||
+        (existingSchedule.startHour < schedule.endHour &&
+          existingSchedule.endHour > schedule.startHour)
+      );
+    });
 
     if (isOverlapping) {
-      alert("이미 해당 시간에 일정이 있습니다.")
-      return
+      alert("이미 해당 시간에 일정이 있습니다.");
+      return;
     }
 
-    setSchedules([...schedules, schedule])
+    setSchedules([...schedules, schedule]);
     // 일정 추가 후 목록 탭으로 전환
-    setActiveTab("list")
-  }
+    setActiveTab("list");
+  };
 
   const handleDeleteSchedule = (id: string) => {
-    setSchedules(schedules.filter((schedule) => schedule.id !== id))
-  }
+    setSchedules(schedules.filter((schedule) => schedule.id !== id));
+  };
 
   // 분석 함수 추가
   const analyzeSchedule = useCallback(() => {
-    setIsAnalyzing(true)
+    setIsAnalyzing(true);
 
     // 분석 시뮬레이션 (실제로는 AI 호출 등이 들어갈 수 있음)
     setTimeout(() => {
       // 스케줄 분석 로직
-      let result = ""
+      let result = "";
 
       if (schedules.length === 0) {
-        result = "아직 등록된 일정이 없습니다. 일정을 추가해 보세요!"
+        result = "아직 등록된 일정이 없습니다. 일정을 추가해 보세요!";
       } else {
         // 카테고리별 시간 계산
         const categoryTimes: Record<string, number> = {
@@ -62,33 +65,33 @@ export default function SchedulePlannerPage() {
           leisure: 0,
           daily: 0,
           etc: 0,
-        }
+        };
 
         schedules.forEach((schedule) => {
           // 시작 시간과 종료 시간을 분 단위로 변환
-          const startTotalMinutes = schedule.startHour * 60 + (schedule.startMinute || 0)
-          const endTotalMinutes = schedule.endHour * 60 + (schedule.endMinute || 0)
+          const startTotalMinutes = schedule.startHour * 60 + (schedule.startMinute || 0);
+          const endTotalMinutes = schedule.endHour * 60 + (schedule.endMinute || 0);
 
           // 시간 차이 계산 (자정을 넘기는 경우 고려)
-          let diffMinutes = endTotalMinutes - startTotalMinutes
+          let diffMinutes = endTotalMinutes - startTotalMinutes;
           if (diffMinutes < 0) {
-            diffMinutes = 24 * 60 + diffMinutes
+            diffMinutes = 24 * 60 + diffMinutes;
           }
 
           // 해당 카테고리에 시간 추가
-          categoryTimes[schedule.category] = (categoryTimes[schedule.category] || 0) + diffMinutes
-        })
+          categoryTimes[schedule.category] = (categoryTimes[schedule.category] || 0) + diffMinutes;
+        });
 
         // 가장 많은 시간을 할애한 카테고리 찾기
-        let maxCategory = "study"
-        let maxTime = 0
+        let maxCategory = "study";
+        let maxTime = 0;
 
         Object.entries(categoryTimes).forEach(([category, time]) => {
           if (time > maxTime) {
-            maxTime = time
-            maxCategory = category
+            maxTime = time;
+            maxCategory = category;
           }
-        })
+        });
 
         // 카테고리 한글명 매핑
         const categoryNames: Record<string, string> = {
@@ -96,32 +99,36 @@ export default function SchedulePlannerPage() {
           leisure: "일상",
           daily: "취미",
           etc: "휴식",
-        }
+        };
 
         // 결과 생성
-        const hours = Math.floor(maxTime / 60)
-        const minutes = maxTime % 60
-        const timeText = hours > 0 ? (minutes > 0 ? `${hours}시간 ${minutes}분` : `${hours}시간`) : `${minutes}분`
+        const hours = Math.floor(maxTime / 60);
+        const minutes = maxTime % 60;
+        const timeText =
+          hours > 0 ? (minutes > 0 ? `${hours}시간 ${minutes}분` : `${hours}시간`) : `${minutes}분`;
 
-        result = `오늘 가장 많은 시간을 할애한 활동은 "${categoryNames[maxCategory]}"입니다. (${timeText})\n`
+        result = `오늘 가장 많은 시간을 할애한 활동은 "${categoryNames[maxCategory]}"입니다. (${timeText})\n`;
 
         // 추가 분석 및 조언
         if (maxCategory === "study" && maxTime > 240) {
-          result += "공부에 많은 시간을 투자하고 있네요! 적절한 휴식도 중요합니다."
+          result += "공부에 많은 시간을 투자하고 있네요! 적절한 휴식도 중요합니다.";
         } else if (maxCategory === "leisure" && maxTime > 240) {
-          result += "여가 활동을 충분히 즐기고 계시네요. 균형 잡힌 일정 관리가 중요합니다."
+          result += "여가 활동을 충분히 즐기고 계시네요. 균형 잡힌 일정 관리가 중요합니다.";
         } else if (categoryTimes.study < 60 && schedules.length > 3) {
-          result += "공부 시간이 부족한 것 같습니다. 학습 시간을 조금 더 확보해 보세요."
+          result += "공부 시간이 부족한 것 같습니다. 학습 시간을 조금 더 확보해 보세요.";
         } else {
-          result += "전반적으로 균형 잡힌 일정을 보내고 있습니다!"
+          result += "전반적으로 균형 잡힌 일정을 보내고 있습니다!";
         }
       }
 
-      setAnalysisResult(result)
-      setIsAnalyzing(false)
-    }, 1500) // 1.5초 후 분석 결과 표시
-  }, [schedules])
+      setAnalysisResult(result);
+      setIsAnalyzing(false);
+    }, 1500); // 1.5초 후 분석 결과 표시
+  }, [schedules]);
 
+  const calcCount = () => {
+    setCount((prev) => prev + 1);
+  };
   return (
     <main className="flex min-h-screen">
       <Sidebar
@@ -131,11 +138,11 @@ export default function SchedulePlannerPage() {
         setSelectedLesson={(lesson) => {
           if (lesson !== 7) {
             if (lesson === 2) {
-              router.push("/yut-game")
+              router.push("/yut-game");
             } else if (lesson === 6) {
-              router.push("/lesson-13")
+              router.push("/lesson-13");
             } else {
-              router.push("/")
+              router.push("/");
             }
           }
         }}
@@ -175,7 +182,7 @@ export default function SchedulePlannerPage() {
 
               {/* 탭 내용 */}
               {activeTab === "form" ? (
-                <ScheduleForm onAddSchedule={handleAddSchedule} />
+                <ScheduleForm onAddSchedule={handleAddSchedule} calcCount={calcCount} />
               ) : (
                 <ScheduleList schedules={schedules} onDeleteSchedule={handleDeleteSchedule} />
               )}
@@ -211,7 +218,7 @@ export default function SchedulePlannerPage() {
 
               {/* 탭 내용 */}
               {activeVisualizationTab === "clock" ? (
-                <ScheduleVisualization schedules={schedules} />
+                <ScheduleVisualization count={count} />
               ) : (
                 <div className="p-4">
                   <h3 className="text-lg font-medium mb-4">항목별 시간 분포</h3>
@@ -228,22 +235,21 @@ export default function SchedulePlannerPage() {
                           leisure: 0,
                           daily: 0,
                           etc: 0,
-                        }
+                        };
 
                         schedules.forEach((schedule) => {
-                          const startTotalMinutes = schedule.startHour * 60 + (schedule.startMinute || 0)
-                          const endTotalMinutes = schedule.endHour * 60 + (schedule.endMinute || 0)
+                          const startTotalMinutes =
+                            schedule.startHour * 60 + (schedule.startMinute || 0);
+                          const endTotalMinutes = schedule.endHour * 60 + (schedule.endMinute || 0);
 
-                          let diffMinutes = endTotalMinutes - startTotalMinutes
+                          let diffMinutes = endTotalMinutes - startTotalMinutes;
                           if (diffMinutes < 0) {
-                            diffMinutes = 24 * 60 + diffMinutes
+                            diffMinutes = 24 * 60 + diffMinutes;
                           }
 
-                          categoryTimes[schedule.category] = (categoryTimes[schedule.category] || 0) + diffMinutes
-                        })
-
-                        // 최대 시간 찾기 (그래프 스케일링용)
-                        const maxTime = Math.max(...Object.values(categoryTimes))
+                          categoryTimes[schedule.category] =
+                            (categoryTimes[schedule.category] || 0) + diffMinutes;
+                        });
 
                         // 카테고리 한글명 매핑
                         const categoryNames: Record<string, string> = {
@@ -251,7 +257,7 @@ export default function SchedulePlannerPage() {
                           leisure: "일상",
                           daily: "취미",
                           etc: "휴식",
-                        }
+                        };
 
                         // 카테고리 색상 매핑
                         const categoryColors: Record<string, string> = {
@@ -259,20 +265,24 @@ export default function SchedulePlannerPage() {
                           leisure: "bg-green-500",
                           daily: "bg-yellow-500",
                           etc: "bg-purple-500",
-                        }
+                        };
 
                         return Object.entries(categoryTimes).map(([category, time]) => {
                           // 시간을 시간:분 형식으로 변환
-                          const hours = Math.floor(time / 60)
-                          const minutes = time % 60
+                          const hours = Math.floor(time / 60);
+                          const minutes = time % 60;
                           const timeText =
-                            hours > 0 ? (minutes > 0 ? `${hours}시간 ${minutes}분` : `${hours}시간`) : `${minutes}분`
+                            hours > 0
+                              ? minutes > 0
+                                ? `${hours}시간 ${minutes}분`
+                                : `${hours}시간`
+                              : `${minutes}분`;
 
                           // 24시간 대비 비율 계산 (%)
-                          const percentOfDay = ((time / 1440) * 100).toFixed(1)
+                          const percentOfDay = ((time / 1440) * 100).toFixed(1);
 
                           // 막대 너비 계산 (최대 100%)
-                          const barWidth = (time / 1440) * 100 // 1440분 = 24시간
+                          const barWidth = (time / 1440) * 100; // 1440분 = 24시간
 
                           return (
                             <div key={category} className="space-y-1">
@@ -289,8 +299,8 @@ export default function SchedulePlannerPage() {
                                 ></div>
                               </div>
                             </div>
-                          )
-                        })
+                          );
+                        });
                       })()}
                     </div>
                   )}
@@ -348,5 +358,5 @@ export default function SchedulePlannerPage() {
         </div>
       </div>
     </main>
-  )
+  );
 }

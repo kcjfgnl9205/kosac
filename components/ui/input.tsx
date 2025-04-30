@@ -1,83 +1,84 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { ChevronUp, ChevronDown } from "lucide-react"
+import * as React from "react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ChevronUp, ChevronDown } from "lucide-react";
 
 export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  variant?: "default" | "time"
-  onTimeConfirm?: (hours: number, minutes: number) => void
+  variant?: "default" | "time";
+  onTimeConfirm?: (hours: number, minutes: number) => void;
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, variant = "default", onTimeConfirm, ...props }, ref) => {
     // For time input variant
-    const [hours, setHours] = React.useState<number>(0)
-    const [minutes, setMinutes] = React.useState<number>(0)
+    const [hours, setHours] = React.useState<number>(0);
+    const [minutes, setMinutes] = React.useState<number>(0);
 
     const incrementHours = () => {
-      const newHours = hours >= 11 ? 0 : hours + 1
-      setHours(newHours)
+      const newHours = hours >= 11 ? 0 : hours + 1;
+      setHours(newHours);
       if (onTimeConfirm) {
-        onTimeConfirm(newHours, minutes)
+        onTimeConfirm(newHours, minutes);
       }
-    }
+    };
 
     const decrementHours = () => {
-      const newHours = hours <= 0 ? 11 : hours - 1
-      setHours(newHours)
+      const newHours = hours <= 0 ? 11 : hours - 1;
+      setHours(newHours);
       if (onTimeConfirm) {
-        onTimeConfirm(newHours, minutes)
+        onTimeConfirm(newHours, minutes);
       }
-    }
+    };
 
     const incrementMinutes = () => {
-      const newMinutes = minutes >= 50 ? 0 : minutes + 10
-      setMinutes(newMinutes)
+      const newMinutes = minutes >= 50 ? 0 : minutes + 10;
+      setMinutes(newMinutes);
       if (onTimeConfirm) {
-        onTimeConfirm(hours, newMinutes)
+        onTimeConfirm(hours, newMinutes);
       }
-    }
+    };
 
     const decrementMinutes = () => {
-      const newMinutes = minutes <= 0 ? 50 : minutes - 10
-      setMinutes(newMinutes)
+      const newMinutes = minutes <= 0 ? 50 : minutes - 10;
+      setMinutes(newMinutes);
       if (onTimeConfirm) {
-        onTimeConfirm(hours, newMinutes)
+        onTimeConfirm(hours, newMinutes);
       }
-    }
+    };
 
     const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = Number.parseInt(e.target.value)
-      if (!isNaN(value) && value >= 0 && value <= 11) {
-        setHours(value)
-        if (onTimeConfirm) {
-          onTimeConfirm(value, minutes)
-        }
-      } else if (e.target.value === "") {
-        setHours(0)
+      const value = Number.parseInt(e.target.value);
+      setHours(value);
+      console.log("Zxcvzxcv");
+      if (onTimeConfirm) {
+        onTimeConfirm(value, minutes);
       }
-    }
+      if (!isNaN(value) && value >= 0 && value <= 11) {
+      } else if (e.target.value === "") {
+        setHours(0);
+      }
+    };
 
     const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const value = Number.parseInt(e.target.value)
+      const value = Number.parseInt(e.target.value);
       // Only allow multiples of 10 for minutes
-      if (!isNaN(value) && value >= 0 && value <= 50 && value % 10 === 0) {
-        setMinutes(value)
-        if (onTimeConfirm) {
-          onTimeConfirm(hours, value)
-        }
-      } else if (e.target.value === "") {
-        setMinutes(0)
+      setMinutes(value);
+      if (onTimeConfirm) {
+        onTimeConfirm(hours, value);
       }
-    }
+      if (!isNaN(value) && value >= 0 && value <= 50 && value % 10 === 0) {
+      } else if (e.target.value === "") {
+        setMinutes(0);
+      }
+    };
 
     const handleConfirm = () => {
       if (onTimeConfirm) {
-        onTimeConfirm(hours, minutes)
+        onTimeConfirm(hours, minutes);
       }
-    }
+    };
 
     if (variant === "time") {
       return (
@@ -89,7 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               value={hours.toString().padStart(2, "0")}
               onChange={handleHoursChange}
               className="h-10 w-12 rounded-l-md border border-input bg-background px-2 py-2 text-sm text-center"
-              maxLength={2}
+              maxLength={3}
             />
             <div className="flex flex-col">
               <Button
@@ -122,7 +123,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
               value={minutes.toString().padStart(2, "0")}
               onChange={handleMinutesChange}
               className="h-10 w-12 rounded-l-md border border-input bg-background px-2 py-2 text-sm text-center"
-              maxLength={2}
+              maxLength={3}
             />
             <div className="flex flex-col">
               <Button
@@ -146,7 +147,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
             </div>
           </div>
         </div>
-      )
+      );
     }
 
     return (
@@ -154,14 +155,14 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         type={type}
         className={cn(
           "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-          className,
+          className
         )}
         ref={ref}
         {...props}
       />
-    )
-  },
-)
-Input.displayName = "Input"
+    );
+  }
+);
+Input.displayName = "Input";
 
-export { Input }
+export { Input };
