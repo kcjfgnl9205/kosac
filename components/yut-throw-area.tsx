@@ -56,7 +56,7 @@ export default function YutThrowArea({
     if (!ctx) return;
 
     canvas.width = 500;
-    canvas.height = 400;
+    canvas.height = 350;
     groundY = canvas.height - 100;
 
     // 초기 위치 설정
@@ -71,7 +71,7 @@ export default function YutThrowArea({
       ctx.rotate(yut.angle);
 
       const width = 40;
-      const height = 120;
+      const height = 160;
       const img = yut.faceUp ? frontImage : backImage;
 
       if (img.complete) {
