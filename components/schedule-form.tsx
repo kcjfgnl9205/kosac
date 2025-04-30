@@ -203,7 +203,7 @@ export default function ScheduleForm({ onAddSchedule, calcCount }: ScheduleFormP
               <div className="flex rounded-md overflow-hidden">
                 <Button
                   type="button"
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 hover:bg-blue-100 ${
                     startAmPm === "AM" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
                   }`}
                   onClick={() => setStartAmPm("AM")}
@@ -212,7 +212,7 @@ export default function ScheduleForm({ onAddSchedule, calcCount }: ScheduleFormP
                 </Button>
                 <Button
                   type="button"
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 hover:bg-blue-100 ${
                     startAmPm === "PM" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
                   }`}
                   onClick={() => setStartAmPm("PM")}
@@ -246,7 +246,7 @@ export default function ScheduleForm({ onAddSchedule, calcCount }: ScheduleFormP
               <div className="flex rounded-md overflow-hidden">
                 <Button
                   type="button"
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 hover:bg-blue-100 ${
                     endAmPm === "AM" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
                   }`}
                   onClick={() => setEndAmPm("AM")}
@@ -255,7 +255,7 @@ export default function ScheduleForm({ onAddSchedule, calcCount }: ScheduleFormP
                 </Button>
                 <Button
                   type="button"
-                  className={`px-3 py-2 ${
+                  className={`px-3 py-2 hover:bg-blue-100 ${
                     endAmPm === "PM" ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-700"
                   }`}
                   onClick={() => setEndAmPm("PM")}
