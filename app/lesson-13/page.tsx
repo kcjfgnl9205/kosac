@@ -325,18 +325,12 @@ export default function Lesson13Page() {
 
       <div className="flex-1 relative overflow-hidden">
         {/* Background Image */}
-        <div className="absolute inset-0 z-0">
-          <Image
-            src="/images/lesson-13-bg.png"
-            alt="배운 것만 말해요 배경"
-            fill
-            className="object-cover"
-            priority
-          />
+        <div className="absolute inset-0 z-0 h-full w-full">
+          <Image src="/images/lesson-13-bg.png" alt="배운 것만 말해요 배경" fill />
         </div>
 
         {/* Semi-transparent container with blur effect - moved down by 60px */}
-        <div className="relative z-10 flex items-center justify-center  h-full py-32 px-16">
+        <div className="relative z-10 flex items-center justify-center  h-full py-24 px-36">
           <div
             className="w-full h-full p-20 flex flex-col relative gap-4"
             tabIndex={0}
@@ -345,7 +339,7 @@ export default function Lesson13Page() {
             {!isSelectionPhase ? (
               // Introduction phase (Steps 1-5)
               <>
-                <div className="absolute top-12 right-48 text-white font-medium text-lg">
+                <div className="absolute top-32 right-32 text-white font-medium text-lg">
                   {currentStep} / {totalSteps}
                 </div>
                 <div className="flex flex-col items-center h-full justify-center relative w-full gap-12">
@@ -372,11 +366,9 @@ export default function Lesson13Page() {
             ) : isQuizCompleted ? (
               isTestPhase ? (
                 isSummaryPhase ? (
-                  // Summary phase (Steps 1-5)
                   <>
-                    {/* Progress indicator */}
-                    <div className="absolute top-12 right-48 text-white font-medium text-lg">
-                      {currentSummaryStep}/{totalSummarySteps}
+                    <div className="absolute top-32 right-32 text-white font-medium text-lg">
+                      {currentSummaryStep} / {totalSummarySteps}
                     </div>
                     <div className="flex flex-col items-center h-full justify-center relative w-full gap-12">
                       <h1 className="text-[#5DFDCB] text-5xl font-bold text-center drop-shadow-md">
@@ -401,38 +393,34 @@ export default function Lesson13Page() {
                     </div>
                   </>
                 ) : (
-                  // Test phase - 1:2 ratio container with drag and drop
-                  <div className="flex flex-col h-full">
-                    {/* Top section (1/3) - Instructions */}
+                  <div className="flex flex-col justify-between h-full w-full py-4 gap-20">
                     <div
                       ref={dropZoneRef}
-                      className="h-1/3 flex items-center justify-center border-b border-white/30 transition-colors"
+                      className="flex items-center justify-center border-b border-white/30 transition-colors w-full h-full"
                       onDragOver={handleDragOver}
                       onDragLeave={handleDragLeave}
                       onDrop={handleDrop}
                     >
                       {showResult && draggedImage ? (
-                        <div className="text-center">
-                          <h2 className="text-[#5DFDCB] text-3xl font-bold mb-2 drop-shadow-md">
+                        <div className="flex flex-col gap-4 items-center justify-center">
+                          <h2 className="text-[#5DFDCB] text-4xl font-bold mb-2 drop-shadow-md">
                             {draggedImage.result}
                           </h2>
-                          <p className="text-white text-lg">
+                          <p className="text-white text-2xl">
                             이 꽃은 {draggedImage.result} 방식으로 씨를 퍼트립니다.
                           </p>
                         </div>
                       ) : (
-                        <p className="text-white/70 text-center text-4xl whitespace-pre-line drop-shadow-md">
+                        <p className="text-white/70 text-center text-4xl whitespace-pre-line drop-shadow-md py-16">
                           이미지를 끌고오면 인공지능이 해당 꽃이 씨를 퍼트리는 방법을 알려줍니다.
                         </p>
                       )}
                     </div>
-
-                    {/* Bottom section (2/3) - Test images */}
-                    <div className="h-2/3 flex items-center justify-center gap-4 p-4">
+                    <div className="flex items-center justify-center gap-4 w-full h-full ">
                       {[...testImages].reverse().map((image) => (
                         <div
                           key={image.id}
-                          className="relative w-[300px] h-[200px] cursor-move hover:scale-105 transition-transform"
+                          className="relative w-[350px] h-[250px] cursor-move hover:scale-105 transition-transform -mt-16"
                           draggable
                           onDragStart={(e) => handleDragStart(e, image)}
                         >
@@ -448,7 +436,7 @@ export default function Lesson13Page() {
 
                     {/* Error popup for dandelion */}
                     {showErrorPopup && (
-                      <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg z-30">
+                      <div className="absolute inset-0 flex items-center justify-center rounded-lg z-30">
                         <div className="bg-white p-12 rounded-lg shadow-lg max-w-[80%] text-center">
                           <p className="text-3xl font-bold mb-6 text-red-500">
                             인공지능이 틀렸어요!
@@ -476,10 +464,8 @@ export default function Lesson13Page() {
                   </div>
                 )
               ) : (
-                // Quiz completion phase
                 <div className="flex flex-col h-full items-center justify-center">
                   {isLoading ? (
-                    // Loading animation
                     <>
                       <h1 className="text-white text-4xl font-bold mb-8 text-center drop-shadow-md">
                         이제 인공지능이 학습을 시작합니다.
@@ -489,7 +475,6 @@ export default function Lesson13Page() {
                       </div>
                     </>
                   ) : (
-                    // Completion message
                     <>
                       <h1 className="text-[#5DFDCB] text-5xl font-bold mb-8 text-center drop-shadow-md">
                         인공지능 학습완료!
