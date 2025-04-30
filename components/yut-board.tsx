@@ -15,6 +15,8 @@ interface YutBoardProps {
 
 // YutBoard 함수의 매개변수에 onRestartGame 추가
 export default function YutBoard({ players, onRestartGame }: YutBoardProps) {
+  const [count, setCount] = useState(0);
+
   // 팝업 상태
   const [tooltipInfo, setTooltipInfo] = useState<{
     type: "benefit" | "penalty";
@@ -23,53 +25,31 @@ export default function YutBoard({ players, onRestartGame }: YutBoardProps) {
     cellPosition: number;
   } | null>(null);
 
-  // 소수 목록 (1-50 사이의 소수)
-  const primeNumbers = [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47];
-
-  // 특별 효과가 있는 칸
-  const specialEffectCells = {
-    19: { type: "benefit" as const, message: "혜택! 앞으로 3칸 이동하기" },
-    23: { type: "penalty" as const, message: "벌칙! 처음으로 가시오." },
-  };
-
-  // 게임판 생성
-  const boardCells = useMemo(() => {
-    const cells = [];
-
-    // 시작 셀
-    cells.push({ id: "start", label: "Start", position: 0 });
-
-    // 1-48 셀
-    for (let i = 1; i <= 48; i++) {
-      cells.push({
-        id: i.toString(),
-        label: i.toString(),
-        position: i,
-        isPrime: primeNumbers.includes(i),
-        specialEffect: specialEffectCells[i as keyof typeof specialEffectCells],
-      });
-    }
-
-    // 종료 셀
-    cells.push({ id: "end", label: "End", position: 49 });
-
-    return cells;
-  }, []);
-
   // 특별 칸 클릭 핸들러
-  const handleCellClick = (cell: any, event: React.MouseEvent) => {
+  const handleCellClick = (event: any) => {
     // 특별 효과가 있는 칸만 처리
-    if (cell.specialEffect) {
-      const rect = (event.target as HTMLElement).getBoundingClientRect();
-
+    console.log("Z");
+    if (count === 0) {
+      setCount((prev) => prev + 1);
       setTooltipInfo({
-        type: cell.specialEffect.type,
-        message: cell.specialEffect.message,
+        type: "benefit",
+        message: "혜택! 앞으로 3칸 이동하기",
         position: {
-          top: rect.top - 80, // 말풍선이 칸 위에 나타나도록
-          left: rect.left + rect.width / 2, // 칸의 중앙에 위치
+          left: 1060, // 칸의 중앙에 위치
+          top: 330, // 말풍선이 칸 위에 나타나도록
         },
-        cellPosition: cell.position,
+        cellPosition: 100,
+      });
+    } else {
+      setCount(0);
+      setTooltipInfo({
+        type: "penalty",
+        message: "벌칙! 처음으로 가시오.",
+        position: {
+          left: 1230, // 칸의 중앙에 위치
+          top: 490, // 말풍선이 칸 위에 나타나도록
+        },
+        cellPosition: 100,
       });
     }
   };
@@ -95,7 +75,13 @@ export default function YutBoard({ players, onRestartGame }: YutBoardProps) {
           alt="테스트 이미지"
           className="absolute top-3 left-16 transition-transform duration-1000"
         />
-        <Image src="/images/yut.png" alt="말판" width={800} height={500} />
+        <Image
+          src="/images/yut.png"
+          alt="말판"
+          width={800}
+          height={500}
+          onClick={handleCellClick}
+        />
       </div>
 
       {/* 특별 칸 범례와 게임 다시 시작하기 버튼을 포함하는 하단 영역 */}
