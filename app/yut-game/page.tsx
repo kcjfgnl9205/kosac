@@ -121,14 +121,26 @@ export default function YutGamePage() {
         // 다음 플레이어로 턴 넘기기
         const item1 = document.getElementById("item1");
         if (item1) {
-          item1.style.transform = "translateX(481px)"; // 바로 이동
-        }
+          // 애니메이션을 위한 transition 설정
+          item1.style.transition = "transform 1s ease";
 
-        // 첫 번째 던지기 후 팝업 (플레이어 1이 5로 이동)
-        showPopup("benefit", "혜택! 옆사람이 노래하기", () => {
-          setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
-          setThrowCount(throwCount + 1);
-        });
+          // transitionend 이벤트 핸들러 등록
+          const onTransitionEnd = () => {
+            // 이벤트 한 번만 실행되도록 제거
+            item1.removeEventListener("transitionend", onTransitionEnd);
+
+            // 이동이 끝난 후 모달 표시
+            showPopup("benefit", "혜택! 옆사람이 노래하기", () => {
+              setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+              setThrowCount(throwCount + 1);
+            });
+          };
+
+          item1.addEventListener("transitionend", onTransitionEnd);
+
+          // 이동 시작
+          item1.style.transform = "translateX(481px)";
+        }
       } else if (throwCount === 1) {
         const item2 = document.getElementById("item2");
         if (item2) {
