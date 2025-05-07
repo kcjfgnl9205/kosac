@@ -10,7 +10,7 @@ const LessonIcon = ({ lessonNumber }: { lessonNumber: number }) => {
       case 1:
         return "🏠"; // 고을에 도둑이 들었소
       case 2:
-        return "🎲"; // 4비트 윷놀이
+        return "🎲"; // 2진수 윷놀이
       case 3:
         return "❓"; // Who are U?
       case 4:
@@ -46,7 +46,7 @@ export default function Sidebar({
 
   const lessons = [
     { number: 1, title: "고을에 도둑이 들었소", originalNumber: 1 },
-    { number: 2, title: "4비트 윷놀이", originalNumber: 2 },
+    { number: 2, title: "2진수 윷놀이", originalNumber: 2 },
     { number: 3, title: "Who are U?", originalNumber: 3 },
     { number: 4, title: "북극곰을 도와줘!", originalNumber: 10 },
     { number: 5, title: "시그널 원해", originalNumber: 12 },
