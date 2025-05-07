@@ -10,7 +10,7 @@ export default function MainContent({ selectedLesson }: MainContentProps) {
   // 모든 차시 정보
   const lessons = [
     { number: 1, title: "고을에 도둑이 들었소", originalNumber: 1 },
-    { number: 2, title: "2진수 윷놀이", originalNumber: 2 },
+    { number: 2, title: "이진수 윷놀이", originalNumber: 2 },
     { number: 3, title: "Who are U?", originalNumber: 3 },
     { number: 4, title: "북극곰을 도와줘!", originalNumber: 10 },
     { number: 5, title: "시그널 원해", originalNumber: 12 },
