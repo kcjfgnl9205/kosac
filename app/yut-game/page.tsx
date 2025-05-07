@@ -118,13 +118,14 @@ export default function YutGamePage() {
 
       // 특별 칸 효과 처리
       if (throwCount === 0) {
+        // 다음 플레이어로 턴 넘기기
+        const item1 = document.getElementById("item1");
+        if (item1) {
+          item1.style.transform = "translateX(481px)"; // 바로 이동
+        }
+
         // 첫 번째 던지기 후 팝업 (플레이어 1이 5로 이동)
         showPopup("benefit", "혜택! 옆사람이 노래하기", () => {
-          // 다음 플레이어로 턴 넘기기
-          const item1 = document.getElementById("item1");
-          if (item1) {
-            item1.style.transform = "translateX(481px)"; // 바로 이동
-          }
           setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
           setThrowCount(throwCount + 1);
         });
